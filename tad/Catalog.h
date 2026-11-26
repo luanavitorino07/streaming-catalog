@@ -12,9 +12,10 @@ typedef struct {
 
 
 typedef enum {
-    OK,
-    NOT_FOUND,
-    MEMORY_ERROR
+    CATALOG_OK,
+    CATALOG_NOT_FOUND,
+    CATALOG_MEMORY_ERROR,
+    CATALOG_DUPLICATED_ID
 } CatalogStatus;
 
 

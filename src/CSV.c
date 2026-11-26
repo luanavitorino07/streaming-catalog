@@ -159,7 +159,7 @@ int import_csv(Catalog *catalog, const char *filename) {
         copy_field(movie.director,MAX, fields[8]);
         movie.votes = parse_int(fields[13]);
 
-        if (catalogInsert(catalog, movie) != OK) {
+        if (catalogInsert(catalog, movie) != CATALOG_OK) {
             fclose(file);
             return 0;
         }

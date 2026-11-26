@@ -49,42 +49,49 @@ static int catalogExpand(Catalog *catalog){
 }
 
 CatalogStatus catalogInsert(Catalog *catalog, Movie movie){
+    if(catalogSearchl(catalog, movie.id) != -1){
+        return CATALOG_DUPLICATED_ID;
+    }
+
+
     if(catalog->size == catalog->capacity) {
         if(catalogExpand(catalog) == 0){
-            return MEMORY_ERROR;
+            return CATALOG_MEMORY_ERROR;
         }      
     }
     catalog->movies[catalog->size] = movie;
     catalog->size++;
 
-    return OK;
+    return CATALOG_OK;
 }
 
 CatalogStatus catalogUpdate(Catalog *catalog, int id, Movie movie_new){
     ptrdiff_t index = catalogSearchl(catalog, id);
     
     if(index == -1){
-        return NOT_FOUND;
+        return CATALOG_NOT_FOUND;
     }
 
     movie_new.id = id;
     catalog->movies[index] = movie_new;
 
-    return OK;
+    return CATALOG_OK;
 }
 
 CatalogStatus catalogRemove(Catalog *catalog, int id){
     ptrdiff_t index = catalogSearchl(catalog, id);
     
     if(index == -1){
-        return NOT_FOUND;
+        return CATALOG_NOT_FOUND;
     }
 
     for(size_t i = (size_t)index; i <catalog->size - 1; i++){
         catalog->movies[i] = catalog->movies[i+1];
     }
 
-    return OK;
+    catalog->size--;
+
+    return CATALOG_OK;
 }
 
 
