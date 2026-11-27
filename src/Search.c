@@ -1,28 +1,79 @@
-#include "search.h"
+#include <string.h>
+#include "../tad/Search.h"
 
-int linear_search(const int arr[], int n, int target){
-    for(int i = 0; i <n; i++){
-        if(arr[i] == target){
-            return i;
+ptrdiff_t linear_search(const Movie arr[], size_t n, int id) {
+    for (size_t i = 0; i < n; i++) {
+
+        if (arr[i].id == id) {
+            return (ptrdiff_t)i;
         }
     }
+
     return -1;
 }
 
-int binary_search(const int arr[], int n, int target){
-    int left = 0;
-    int right = n-1; 
+ptrdiff_t binary_search(const Movie arr[], size_t n, int id) {
+    size_t left = 0;
+    size_t right = n;
 
-    while(left <= right && target >= arr[left] && target <= arr[right]){   
-        int mid = left + (right - left) / 2;
+    while (left < right) {
+        size_t mid = left + (right - left) / 2;
 
-        if (arr[mid] == target) {
-            return (int)mid;
-        } else if (arr[mid] < target) {
+        if (arr[mid].id == id) {
+            return (ptrdiff_t)mid;
+        }
+
+        if (arr[mid].id < id) {
             left = mid + 1;
         } else {
-            if (mid == 0) break;
-            right = mid - 1;
+            right = mid;
+        }
+    }
+
+    return -1;
+}
+
+ptrdiff_t interpolation_search(const Movie arr[],size_t n,int id) {
+    if (n == 0) {
+        return -1;
+    }
+
+    size_t low = 0;
+    size_t high = n - 1;
+
+    while (low <= high &&
+           id >= arr[low].id &&
+           id <= arr[high].id) {
+
+        if (arr[low].id == arr[high].id) {
+
+            if (arr[low].id == id) {
+                return (ptrdiff_t)low;
+            }
+
+            return -1;
+        }
+
+        long double fraction =
+            (long double)(id - arr[low].id) /
+            (arr[high].id - arr[low].id);
+
+        size_t pos = low +
+            (size_t)(fraction * (high - low));
+
+        if (arr[pos].id == id) {
+            return (ptrdiff_t)pos;
+        }
+
+        if (arr[pos].id < id) {
+            low = pos + 1;
+        } else {
+
+            if (pos == 0) {
+                return -1;
+            }
+
+            high = pos - 1;
         }
     }
 
@@ -30,27 +81,36 @@ int binary_search(const int arr[], int n, int target){
 }
 
 
-int interpolation_search(const int arr[], int n, int target){
-    int left = 0;
-    int right = n-1; 
 
-    while(left <= right && target >= arr[left] && target <= arr[right]){   
-        if (arr[left] == arr[right]) {
-            if (arr[left] == target) return (int)left;
-            break;
+
+ptrdiff_t linear_search_title(const Movie arr[],size_t n,const char *title) {
+    for (size_t i = 0; i < n; i++) {
+        if (strcmp(arr[i].title, title) == 0) {
+            return (ptrdiff_t)i;
+        }
+    }
+
+    return -1;
+}
+
+ptrdiff_t binary_search_title(const Movie arr[],size_t n,const char *title) {
+    size_t left = 0;
+    size_t right = n;
+
+    while (left < right) {
+        size_t mid = left + (right - left) / 2;
+
+        int comparison = strcmp(arr[mid].title, title);
+
+        if (comparison == 0) {
+            return (ptrdiff_t)mid;
         }
 
-        int pos = left + (int)(((double)(target - arr[left]) / (arr[right] - arr[left])) * (right - left));
-
-        if (arr[pos] == target) {
-            return (int)pos;
-        } else if (arr[pos] < target) {
-            left = pos + 1;
+        if (comparison < 0) {
+            left = mid + 1;
         } else {
-            if (pos == 0) break;
-            right = pos - 1;
+            right = mid;
         }
-        
     }
 
     return -1;

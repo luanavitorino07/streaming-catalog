@@ -1,5 +1,6 @@
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "../tad/Sort.h"
 
@@ -20,9 +21,18 @@ static int compare_movies(const Movie *a, const Movie *b, SortCriteria criteria)
             if (a->votes < b->votes) return -1;
             if (a->votes > b->votes) return 1;
             break;
+
+        case SORT_BY_TITLE:
+            return strcmp(a->title, b->title);
+            break;
+        
+        case SORT_BY_ID:
+            if (a->id < b->id) return -1;
+            if (a->id > b->id) return 1;
+            break;
     }
 
-    // remove ambiguidades comparando por ids 
+    // remove ambiguidades das demais comparações, comparando por ids 
     if (a->id < b->id) return -1;
     if (a->id > b->id) return 1;
 

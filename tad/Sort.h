@@ -2,12 +2,14 @@
 #define SORT_H
 
 #include <stddef.h>
-#include "../tad/Movie.h"
+#include "Movie.h"
 
 typedef enum {
     SORT_BY_RATING,
     SORT_BY_YEAR,
-    SORT_BY_VOTES
+    SORT_BY_VOTES, 
+    SORT_BY_TITLE,
+    SORT_BY_ID
 } SortCriteria;
 
 void insertion_sort(Movie arr[], size_t n, SortCriteria criteria);
