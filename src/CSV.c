@@ -6,17 +6,17 @@
 #include <string.h>
 #include <errno.h>
 
-#define MAX_LINE_SIZE 8192
+#define MAX_STR_LINE_SIZE 8192
 #define CSV_COLUMNS 18
-#define MAX 150
 
 
-static int parse_csv_line(char *line, char *fields[], int max_fields) {
+
+static int parse_csv_line(char *line, char *fields[], int MAX_STR_fields) {
     char *read = line;
     char *write = line;
     int count = 0;
 
-    while (count < max_fields) {
+    while (count < MAX_STR_fields) {
         fields[count++] = write;
 
         if (*read == '"') {
@@ -59,7 +59,7 @@ static int parse_csv_line(char *line, char *fields[], int max_fields) {
         read++;
 
         if (*read == '\0') {
-            if (count < max_fields) {
+            if (count < MAX_STR_fields) {
                 fields[count++] = write;
                 *write = '\0';
             }
@@ -122,7 +122,7 @@ int import_csv(Catalog *catalog, const char *filename) {
         return 0;
     }
 
-    char line[MAX_LINE_SIZE];
+    char line[MAX_STR_LINE_SIZE];
 
     /* Skip the CSV header. */
     if (fgets(line, sizeof(line), file) == NULL) {
@@ -150,13 +150,13 @@ int import_csv(Catalog *catalog, const char *filename) {
 
         movie.id = (int)catalog->size + 1;
 
-        copy_field(movie.title, MAX, fields[0]);
+        copy_field(movie.title, MAX_STR, fields[0]);
         movie.year = parse_int(fields[1]);
-        copy_field(movie.certificate, MAX, fields[2]);
+        copy_field(movie.certificate, MAX_STR, fields[2]);
         movie.runtime = parse_int(fields[3]);
-        copy_field(movie.genre,MAX, fields[4]);
+        copy_field(movie.genre,MAX_STR, fields[4]);
         movie.rating = parse_float(fields[5]);
-        copy_field(movie.director,MAX, fields[8]);
+        copy_field(movie.director,MAX_STR, fields[8]);
         movie.votes = parse_int(fields[13]);
 
         if (catalogInsert(catalog, movie) != CATALOG_OK) {
