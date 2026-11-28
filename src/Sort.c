@@ -111,3 +111,57 @@ void quick_sort_first_pivot(Movie arr[], size_t n, SortCriteria criteria) {
 void quick_sort_random_pivot(Movie arr[], size_t n, SortCriteria criteria) {
     quick_sort_recursive(arr, 0, n, criteria, 1);
 }
+
+
+
+
+/*
+propriedade: max heap, cada nó pai é maior ou igual aos seus filhos
+indices: pai de i é (i−1)/2 e os filhos são 2i+1 e 2i+2
+*/
+
+static void sift_down(Movie arr[], size_t start, size_t active, SortCriteria criteria) {
+    Movie value = arr[start];
+    size_t i = start;
+
+    while (2 * i + 1 < active) {
+        size_t child = 2 * i + 1;
+
+        if (child + 1 < active && compare_movies(&arr[child + 1], &arr[child], criteria) > 0) {
+            child++;                                   
+        }
+
+        if (compare_movies(&value, &arr[child], criteria) >= 0)  break;
+
+
+        arr[i] = arr[child];
+        i = child;
+    }
+    arr[i] = value;
+}
+
+void heap_build(Movie arr[], size_t n, SortCriteria criteria) {
+    for (size_t i = n / 2; i > 0; i--){
+        sift_down(arr, i - 1, n, criteria);
+    }
+}
+
+size_t heap_extract_max(Movie arr[], size_t active, SortCriteria criteria) {
+    if (active < 2) return active;
+
+    Movie tmp = arr[0];
+    arr[0] = arr[active - 1];
+    arr[active - 1] = tmp;                 
+    sift_down(arr, 0, active - 1, criteria);
+
+    return active - 1;
+}
+
+void heap_sort(Movie arr[], size_t n, SortCriteria criteria) {
+    heap_build(arr, n, criteria);
+    size_t active = n;
+
+    while (active > 1){
+        active = heap_extract_max(arr, active, criteria);
+    }
+}

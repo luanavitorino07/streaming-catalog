@@ -18,4 +18,9 @@ void quick_sort_first_pivot(Movie arr[], size_t n, SortCriteria criteria);
 
 void quick_sort_random_pivot(Movie arr[], size_t n, SortCriteria criteria);
 
+
+void   heap_build(Movie arr[], size_t n, SortCriteria criteria);
+size_t heap_extract_max(Movie arr[], size_t active, SortCriteria criteria);
+void   heap_sort(Movie arr[], size_t n, SortCriteria criteria);
+
 #endif
